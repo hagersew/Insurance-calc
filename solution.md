@@ -18,7 +18,7 @@ This document describes the high-level architecture of InsuranceApp
 
 ---
 
-On the highest level, **InsuranceApp** is premium insurance calculator form of web-application.
+On the highest level, **InsuranceApp** is premium insurance calculator in the form of web-application.
 More specifically, the application provides user interface to input user information and calculates premium insurance.
 
 User also provide information, such as name, age, place of residence, and insurance package.

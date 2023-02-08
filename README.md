@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# InsuranceApp
+
+**InsuranceApp** is premium insurance calculator in the form of web-application.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
