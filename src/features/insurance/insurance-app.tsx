@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from '../../components/button';
 import { Insurance } from './interface/insurance.interface';
-import PageThree from './components/page-three';
-import PageTwo from './components/page-two';
-import PageOne from './components/page-one';
-import PageError from './components/page-error';
+import PageThree from './pages/page-three';
+import PageTwo from './pages/page-two';
+import PageOne from './pages/page-one';
+import PageError from './pages/page-error';
 import { CountryType, Package } from './models/insurance.model';
 
 const HKD_RATE = 1;
