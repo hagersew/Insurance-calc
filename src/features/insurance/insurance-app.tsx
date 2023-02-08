@@ -17,11 +17,11 @@ function calculateInsurancePremium(age: number, rate: number) {
 }
 
 function calculateSafePackage(premium: number) {
-  return (premium! * 50) / 100;
+  if (premium != undefined) return (premium! * 50) / 100;
 }
 
 function calculateSuperPackage(premium: number) {
-  return (premium! * 75) / 100;
+  if (premium != undefined) return (premium! * 75) / 100;
 }
 
 const InsuranceApp = () => {
@@ -69,11 +69,11 @@ const InsuranceApp = () => {
         break;
       }
       case Package.Safe: {
-        premium = premium + insuranceInfo.safePackage!;
+        premium = premium! + insuranceInfo.safePackage!;
         break;
       }
       case Package.Super_Safe: {
-        premium = premium + insuranceInfo.superPackage!;
+        premium = premium! + insuranceInfo.superPackage!;
         break;
       }
     }
