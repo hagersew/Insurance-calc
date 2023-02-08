@@ -5,10 +5,10 @@ uplifted the state from individual page
 
 # Technical choice
 
-**React**
-**Tailwind**
-**Unit Test**
-**storybook**
+- React
+- Tailwind
+- Unit Test
+- storybook
 
 ---
 

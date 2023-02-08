@@ -5,17 +5,28 @@ import PageThree from './pages/page-three';
 import PageTwo from './pages/page-two';
 import PageOne from './pages/page-one';
 import PageError from './pages/page-error';
-import { Country, CountryCurrency, Package } from './models/insurance.model';
+import { CountryCurrency, Package } from './models/insurance.model';
 
 const HKD_RATE = 1;
 const USD_RATE = 2;
 const AUD_RATE = 3;
 const AGE_LIMIT = 100;
 
+function calculateInsurancePremium(age: number, rate: number) {
+  if (age > 0) return age * 10 * rate;
+}
+
+function calculateSafePackage(premium: number) {
+  return (premium! * 50) / 100;
+}
+
+function calculateSuperPackage(premium: number) {
+  return (premium! * 75) / 100;
+}
+
 const InsuranceApp = () => {
   const [current, setCurrent] = React.useState(0);
 
-  const [premium, setPremium] = useState(0);
   const [insuranceInfo, setInsuranceInfo] = useState<Insurance>({
     name: '',
     age: 0,
@@ -27,52 +38,49 @@ const InsuranceApp = () => {
   });
 
   useEffect(() => {
-    if (insuranceInfo?.country === CountryCurrency.Hong_Kong) {
-      setInsuranceInfo((prevState: any) => ({
-        ...prevState,
-        premium: insuranceInfo.age! * 10 * HKD_RATE,
-      }));
-      setPremium(insuranceInfo.age! * 10 * HKD_RATE);
-    } else if (insuranceInfo.country === CountryCurrency.USA) {
-      setInsuranceInfo((prevState: any) => ({
-        ...prevState,
-        premium: insuranceInfo.age! * 10 * USD_RATE,
-      }));
-      setPremium(insuranceInfo.age! * 10 * USD_RATE);
-    } else if (insuranceInfo?.country === CountryCurrency.Australia) {
-      setInsuranceInfo((prevState: any) => ({
-        ...prevState,
-        premium: insuranceInfo.age! * 10 * AUD_RATE,
-      }));
-      setPremium(insuranceInfo.age! * 10 * AUD_RATE);
+    let premium = 0;
+    switch (insuranceInfo?.country) {
+      case CountryCurrency.Hong_Kong: {
+        premium = calculateInsurancePremium(insuranceInfo.age!, HKD_RATE)!;
+        break;
+      }
+      case CountryCurrency.USA: {
+        premium = calculateInsurancePremium(insuranceInfo.age!, USD_RATE)!;
+        break;
+      }
+      case CountryCurrency.Australia: {
+        premium = calculateInsurancePremium(insuranceInfo.age!, AUD_RATE)!;
+        break;
+      }
     }
+    setInsuranceInfo((prevState: Insurance) => ({
+      ...prevState,
+      premium,
+      safePackage: calculateSafePackage(premium!),
+      superPackage: calculateSuperPackage(premium!),
+    }));
   }, [insuranceInfo.country, insuranceInfo.age]);
 
   useEffect(() => {
-    setInsuranceInfo((prevState: any) => ({
-      ...prevState,
-      safePackage: (premium! * 50) / 100,
-      superPackage: (premium! * 75) / 100,
-    }));
-  }, [premium]);
-
-  useEffect(() => {
-    if (insuranceInfo.package === Package.Standard) {
-      setInsuranceInfo((prevState: any) => ({
-        ...prevState,
-        premium: premium!,
-      }));
-    } else if (insuranceInfo.package === Package.Safe) {
-      setInsuranceInfo((prevState: any) => ({
-        ...prevState,
-        premium: premium + insuranceInfo.safePackage!,
-      }));
-    } else if (insuranceInfo.package === Package.Super_Safe) {
-      setInsuranceInfo((prevState: any) => ({
-        ...prevState,
-        premium: premium! + insuranceInfo.superPackage!,
-      }));
+    let premium = insuranceInfo.premium!;
+    switch (insuranceInfo.package) {
+      case Package.Standard: {
+        premium = insuranceInfo.premium!;
+        break;
+      }
+      case Package.Safe: {
+        premium = premium + insuranceInfo.safePackage!;
+        break;
+      }
+      case Package.Super_Safe: {
+        premium = premium + insuranceInfo.superPackage!;
+        break;
+      }
     }
+    setInsuranceInfo((prevState: Insurance) => ({
+      ...prevState,
+      premium,
+    }));
   }, [insuranceInfo.package]);
 
   const renderStep = (currentStep: number) => {
@@ -102,41 +110,53 @@ const InsuranceApp = () => {
   };
 
   const prev = () => {
+    if (current === 0) {
+      return;
+    }
     setCurrent(current - 1);
   };
 
   const handleSubmit = (): void => {
-    if (insuranceInfo.name === '' && insuranceInfo.age! <= 0) return;
+    if (
+      insuranceInfo.name === '' ||
+      (insuranceInfo.age! <= 0 && !isNaN(insuranceInfo.age!))
+    )
+      return;
     insuranceInfo?.age! > AGE_LIMIT ? setCurrent(3) : setCurrent(2);
 
     if (current === 2) setCurrent(0);
   };
-  const currentSteps = () => {
-    if (current === 0) {
-      return (
-        <Button testId="startBtn" className="w-52" onClick={() => next()}>
-          Start
-        </Button>
-      );
-    } else if (current === 3) {
-      return (
-        <Button testId="okBtn" onClick={() => setCurrent(0)}>
-          Ok :(
-        </Button>
-      );
-    } else {
-      return (
-        <>
-          {current > 0 && (
-            <Button testId="backBtn" onClick={() => prev()} variant="secondary">
-              Back
-            </Button>
-          )}
-          <Button testId="nextBtn" onClick={handleSubmit}>
-            {current === 2 ? 'Buy' : 'Next'}
+  const navigation = () => {
+    switch (current) {
+      case 0:
+        return (
+          <Button testId="startBtn" className="w-52" onClick={() => next()}>
+            Start
           </Button>
-        </>
-      );
+        );
+      case 3:
+        return (
+          <Button testId="okBtn" onClick={() => setCurrent(0)}>
+            Ok :(
+          </Button>
+        );
+      default:
+        return (
+          <>
+            {current > 0 && (
+              <Button
+                testId="backBtn"
+                onClick={() => prev()}
+                variant="secondary"
+              >
+                Back
+              </Button>
+            )}
+            <Button testId="nextBtn" onClick={handleSubmit}>
+              {current === 2 ? 'Buy' : 'Next'}
+            </Button>
+          </>
+        );
     }
   };
 
@@ -148,7 +168,7 @@ const InsuranceApp = () => {
             <form onSubmit={handleSubmit}>{renderStep(current)}</form>
           </div>
           <div className="flex mt-10 mb-10 space-x-3 md:mt-6 w-1/2 justify-center">
-            {currentSteps()}
+            {navigation()}
           </div>
         </div>
       </div>

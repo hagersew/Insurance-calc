@@ -21,5 +21,4 @@ it('eventHandler should be called on click', () => {
 
   fireEvent.click(screen.getByText(/Buy/i));
   expect(handleClick).toHaveBeenCalledTimes(1);
-  expect(handleClick).not.toHaveBeenCalledTimes(2);
 });

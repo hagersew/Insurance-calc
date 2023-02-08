@@ -10,7 +10,7 @@ const PageThree: React.FC<IPageThree> = ({ insuranceInfo }) => {
   return (
     <div className="flex flex-col items-center px-16 py-10 ">
       <div className="font-bold text-2xl mb-2">Summary</div>
-      <div className="font-bold text-lg mb-2">${`{name}`},</div>
+      <div className="font-bold text-lg mb-2">{insuranceInfo.name}</div>
       <p className="align-center font-thin" data-testid="getName">
         Name: {insuranceInfo.name}
       </p>
@@ -31,7 +31,8 @@ const PageThree: React.FC<IPageThree> = ({ insuranceInfo }) => {
         Package: {insuranceInfo.package}
       </p>
       <p className="align-center font-thin" data-testid="getPremium">
-        Premium: {insuranceInfo.premium}{insuranceInfo.country}
+        Premium: {insuranceInfo.premium}
+        {insuranceInfo.country}
       </p>
     </div>
   );
