@@ -1,14 +1,15 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Insurance } from '../interface/insurance.interface';
+import { Country, CountryCurrency, Package } from '../models/insurance.model';
 
 interface insuranceInfo {
   setInsurance: Dispatch<SetStateAction<Insurance>>;
-  premium: string | undefined;
+  insuranceInfo: Insurance;
 }
 
 const PageTwo = (prop: insuranceInfo) => {
-  const { premium } = prop;
-
+  const { insuranceInfo } = prop;
+  console.log(insuranceInfo);
   const handleFormChange = (e: any) => {
     prop.setInsurance((prevState: Insurance) => ({
       ...prevState,
@@ -31,6 +32,7 @@ const PageTwo = (prop: insuranceInfo) => {
           placeholder="Add name"
           onChange={handleFormChange}
           required
+          data-testid="setName"
         ></input>
       </div>
       <div>
@@ -45,9 +47,10 @@ const PageTwo = (prop: insuranceInfo) => {
           placeholder="Add Age"
           required
           onChange={handleFormChange}
+          data-testid="setAge"
         ></input>
       </div>
-      <div className="mt-4">
+      <div>
         <label className="block mb-2 text-sm font-medium text-black dark:text-black">
           Where do you live
         </label>
@@ -57,54 +60,64 @@ const PageTwo = (prop: insuranceInfo) => {
           onChange={handleFormChange}
           onLoad={handleFormChange}
           id="country"
+          data-testid="setCountry"
         >
-          <option value="HKD">Hong Kong</option>
-          <option value="USD">USA</option>
-          <option value="AUD">Australia</option>
+          <option value={CountryCurrency.Hong_Kong}>{Country.Hong_Kong}</option>
+          <option value={CountryCurrency.USA}>{Country.USA}</option>
+          <option value={CountryCurrency.Australia}>{Country.Australia}</option>
         </select>
       </div>
-      <div className="flex items-center mt-4">
-        <input
-          id="package"
-          type="radio"
-          value="Standard"
-          name="package"
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          onChange={handleFormChange}
-        />
-        <label className="ml-2 text-sm font-medium text-black dark:text-black">
-          Standard
-        </label>
-      </div>
-      <div className="flex items-center mt-4">
-        <input
-          id="package"
-          type="radio"
-          value="Safe"
-          name="package"
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          onChange={handleFormChange}
-        />
-        <label className="ml-2 text-sm font-medium text-black dark:text-black">
-          Safe (+250HKD, 50%)
-        </label>
-      </div>
-      <div className="flex items-center mt-4">
-        <input
-          id="package"
-          type="radio"
-          value="Super Safe"
-          name="package"
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          onChange={handleFormChange}
-        />
-        <label className="ml-2 text-sm font-medium text-black dark:text-black">
-          Super Safe (+370HKD, 75%)
-        </label>
+
+      <div onChange={handleFormChange}>
+        <div className="flex items-center mt-4">
+          <input
+            id="package"
+            type="radio"
+            value={Package.Standard}
+            name="package"
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            data-testid="setPackageStandard"
+            defaultChecked
+          />
+          <label className="ml-2 text-sm font-medium text-black dark:text-black">
+            {Package.Standard}
+          </label>
+        </div>
+        <div className="flex items-center mt-4">
+          <input
+            id="package"
+            type="radio"
+            value={Package.Safe}
+            name="package"
+            data-testid="setPackageSafe"
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+          />
+          <label className="ml-2 text-sm font-medium text-black dark:text-black">
+            {Package.Safe} (+{insuranceInfo.safePackage}
+            {insuranceInfo.country}, 50%)
+          </label>
+        </div>
+        <div className="flex items-center mt-4">
+          <input
+            id="package"
+            type="radio"
+            value={Package.Super_Safe}
+            name="package"
+            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            data-testid="setPackageSuper"
+          />
+          <label className="ml-2 text-sm font-medium text-black dark:text-black">
+            {Package.Super_Safe} (+{insuranceInfo.superPackage}
+            {insuranceInfo.country}, 75%)
+          </label>
+        </div>
       </div>
 
-      <div className="font-bold text-2xl mb-2 mt-10">
-        Your premium is {premium}
+      <div className="font-bold text-2xl mb-2 mt-10" data-testid="getPremium">
+        Your premium is {insuranceInfo.premium} {' '}
+        {insuranceInfo.premium! > 0
+          ? insuranceInfo.premium! + insuranceInfo.country!
+          : ''}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import PageThree from './pages/page-three';
 import PageTwo from './pages/page-two';
 import PageOne from './pages/page-one';
 import PageError from './pages/page-error';
-import { CountryType, Package } from './models/insurance.model';
+import { Country, CountryCurrency, Package } from './models/insurance.model';
 
 const HKD_RATE = 1;
 const USD_RATE = 2;
@@ -15,32 +15,65 @@ const AGE_LIMIT = 100;
 const InsuranceApp = () => {
   const [current, setCurrent] = React.useState(0);
 
+  const [premium, setPremium] = useState(0);
   const [insuranceInfo, setInsuranceInfo] = useState<Insurance>({
     name: '',
     age: 0,
-    country: CountryType.Hong_Kong,
-    premium: '',
+    country: CountryCurrency.Hong_Kong,
+    premium: 0,
     package: Package.Standard,
+    safePackage: 0,
+    superPackage: 0,
   });
 
   useEffect(() => {
-    if (insuranceInfo?.country === CountryType.Hong_Kong) {
+    if (insuranceInfo?.country === CountryCurrency.Hong_Kong) {
       setInsuranceInfo((prevState: any) => ({
         ...prevState,
-        premium: insuranceInfo.age! * 10 * HKD_RATE + CountryType.Hong_Kong,
+        premium: insuranceInfo.age! * 10 * HKD_RATE,
       }));
-    } else if (insuranceInfo.country === CountryType.USA) {
+      setPremium(insuranceInfo.age! * 10 * HKD_RATE);
+    } else if (insuranceInfo.country === CountryCurrency.USA) {
       setInsuranceInfo((prevState: any) => ({
         ...prevState,
-        premium: insuranceInfo.age! * 10 * USD_RATE + CountryType.USA,
+        premium: insuranceInfo.age! * 10 * USD_RATE,
       }));
-    } else if (insuranceInfo?.country === CountryType.Australia) {
+      setPremium(insuranceInfo.age! * 10 * USD_RATE);
+    } else if (insuranceInfo?.country === CountryCurrency.Australia) {
       setInsuranceInfo((prevState: any) => ({
         ...prevState,
-        premium: insuranceInfo.age! * 10 * AUD_RATE + CountryType.Australia,
+        premium: insuranceInfo.age! * 10 * AUD_RATE,
       }));
+      setPremium(insuranceInfo.age! * 10 * AUD_RATE);
     }
   }, [insuranceInfo.country, insuranceInfo.age]);
+
+  useEffect(() => {
+    setInsuranceInfo((prevState: any) => ({
+      ...prevState,
+      safePackage: (premium! * 50) / 100,
+      superPackage: (premium! * 75) / 100,
+    }));
+  }, [premium]);
+
+  useEffect(() => {
+    if (insuranceInfo.package === Package.Standard) {
+      setInsuranceInfo((prevState: any) => ({
+        ...prevState,
+        premium: premium!,
+      }));
+    } else if (insuranceInfo.package === Package.Safe) {
+      setInsuranceInfo((prevState: any) => ({
+        ...prevState,
+        premium: premium + insuranceInfo.safePackage!,
+      }));
+    } else if (insuranceInfo.package === Package.Super_Safe) {
+      setInsuranceInfo((prevState: any) => ({
+        ...prevState,
+        premium: premium! + insuranceInfo.superPackage!,
+      }));
+    }
+  }, [insuranceInfo.package]);
 
   const renderStep = (currentStep: number) => {
     switch (currentStep) {
@@ -50,7 +83,7 @@ const InsuranceApp = () => {
         return (
           <PageTwo
             setInsurance={setInsuranceInfo}
-            premium={insuranceInfo.premium}
+            insuranceInfo={insuranceInfo}
           />
         );
       case 2:
@@ -73,8 +106,7 @@ const InsuranceApp = () => {
   };
 
   const handleSubmit = (): void => {
-    if (insuranceInfo.name === '' && insuranceInfo.age! === 0) return;
-
+    if (insuranceInfo.name === '' && insuranceInfo.age! <= 0) return;
     insuranceInfo?.age! > AGE_LIMIT ? setCurrent(3) : setCurrent(2);
 
     if (current === 2) setCurrent(0);
@@ -87,7 +119,11 @@ const InsuranceApp = () => {
         </Button>
       );
     } else if (current === 3) {
-      return <Button onClick={() => setCurrent(0)}>Ok :(</Button>;
+      return (
+        <Button testId="okBtn" onClick={() => setCurrent(0)}>
+          Ok :(
+        </Button>
+      );
     } else {
       return (
         <>

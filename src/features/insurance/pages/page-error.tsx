@@ -2,7 +2,7 @@ import React from 'react';
 
 function PageError() {
   return (
-    <div>
+    <div data-testid="error-page">
       <div className="flex flex-col items-center px-10 py-10 space-y-10">
         <div className="font-bold text-2xl mb-2">Ooops</div>
         <div className="grid place-items-center align-center font-thin">
