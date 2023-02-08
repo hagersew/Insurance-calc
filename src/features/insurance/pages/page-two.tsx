@@ -9,7 +9,6 @@ interface insuranceInfo {
 
 const PageTwo = (prop: insuranceInfo) => {
   const { insuranceInfo } = prop;
-  console.log(insuranceInfo);
   const handleFormChange = (e: any) => {
     prop.setInsurance((prevState: Insurance) => ({
       ...prevState,
@@ -114,7 +113,7 @@ const PageTwo = (prop: insuranceInfo) => {
       </div>
 
       <div className="font-bold text-2xl mb-2 mt-10" data-testid="getPremium">
-        Your premium is {insuranceInfo.premium} {' '}
+        Your premium is{' '}
         {insuranceInfo.premium! > 0
           ? insuranceInfo.premium! + insuranceInfo.country!
           : ''}

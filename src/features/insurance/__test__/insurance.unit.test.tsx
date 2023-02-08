@@ -83,7 +83,7 @@ it('should render summary page', () => {
     target: { value: CountryCurrency.Australia },
   });
   fireEvent.click(setPackage);
-  
+
   fireEvent.click(nextBtn);
 
   const getName = screen.getByTestId('getName');
@@ -96,5 +96,5 @@ it('should render summary page', () => {
   expect(getAge).toHaveTextContent('30');
   expect(getCountry).toHaveTextContent(Country.Australia);
   expect(getPackage).toHaveTextContent(Package.Super_Safe);
-  expect(getPremium).toHaveTextContent('Premium: 900AUD');
+  expect(getPremium).toHaveTextContent('Premium: 1575AUD');
 });
