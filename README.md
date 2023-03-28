@@ -2,6 +2,15 @@
 
 **InsuranceApp** is premium insurance calculator in the form of web-application.
 
+A premium insurance calculator is a tool that helps you estimate the cost of your insurance policy. It takes into account factors such as your age, location, and insurance type. The calculator can also help you compare different insurance policies.
+
+Premium insurance calculators are a valuable tool for anyone who is looking for or renewing an insurance policy. They can help you find the best deal on your insurance and make sure that you are adequately covered.
+
+Here are some tips for using a premium insurance calculator:
+
+Be honest about your information. The calculator will not be able to give you an accurate estimate if you are not honest about your age, and location.
+Compare different insurance policies from different companies. The calculator can help you compare different policies from different companies to find the best deal.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
